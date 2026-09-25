@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Formatador de Escala</title>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+  <main class="card">
+    <div class="brand"><span class="brand-icon">✚</span><span>Escala HMAF</span></div>
+    <h1>Formatar escala mensal</h1>
+    <p>Escolha a planilha de entrada e baixe o formato que precisar. O arquivo não sai do seu computador.</p>
+    <label for="arquivo">Planilha de entrada</label>
+    <input id="arquivo" type="file" accept=".xlsx,.xls">
+    <div class="acoes">
+      <button id="gerarExcel" type="button" disabled><img src="src/icons/excel.svg" alt="">Baixar Excel</button>
+      <button id="gerarDocx" class="secondary" type="button" disabled><img src="src/icons/word.svg" alt="">Baixar Word</button>
+    </div>
+    <p id="status" aria-live="polite"></p>
+    <small>A aba deve se chamar <strong>ESCALA</strong>; a leitura começa na linha 6.</small>
+  </main>
+  <script src="src/app.js"></script>
+</body>
+</html>
