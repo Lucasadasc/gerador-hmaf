@@ -14,6 +14,9 @@
     <p>Escolha a planilha de entrada e baixe o formato que precisar. O arquivo não sai do seu computador.</p>
     <label for="arquivo">Planilha de entrada</label>
     <input id="arquivo" type="file" accept=".xlsx,.xls">
+    <label for="competencia">Mês e ano do relatório</label>
+    <input id="competencia" type="month" required aria-describedby="ajudaCompetencia">
+    <small id="ajudaCompetencia" class="ajuda-campo">Obrigatório. Informe a competência que será usada em todas as datas do relatório.</small>
     <div class="acoes">
       <button id="gerarExcel" type="button" disabled><img src="src/icons/excel.svg" alt="">Baixar Excel</button>
       <button id="gerarDocx" class="secondary" type="button" disabled><img src="src/icons/word.svg" alt="">Baixar Word</button>

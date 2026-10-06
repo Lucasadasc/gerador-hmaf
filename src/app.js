@@ -1,5 +1,6 @@
 const DIAS_SEMANA = ['DOMINGO', 'SEGUNDA-FEIRA', 'TERÇA-FEIRA', 'QUARTA-FEIRA', 'QUINTA-FEIRA', 'SEXTA-FEIRA', 'SÁBADO'];
 const arquivo = document.querySelector('#arquivo');
+const competencia = document.querySelector('#competencia');
 const status = document.querySelector('#status');
 const botoes = [...document.querySelectorAll('button')];
 
@@ -9,13 +10,10 @@ function nomeCurto(valor) {
   return `${partes[0]} ${partes[1]}${partes[2] && !['de', 'do', 'da', 'dos', 'das'].includes(partes[2].toLowerCase()) ? ` ${partes[2]}` : ''}`;
 }
 
-function identificarMesAno(dados) {
-  for (const linha of dados.slice(0, 6)) for (const celula of linha || []) {
-    const resultado = String(celula || '').match(/(\d{1,2})[/-](\d{4})/);
-    if (resultado) return { mes: Number(resultado[1]), ano: Number(resultado[2]) };
-  }
-  const hoje = new Date();
-  return { mes: hoje.getMonth() + 1, ano: hoje.getFullYear() };
+function obterMesAnoSelecionado() {
+  const resultado = /^(\d{4})-(\d{2})$/.exec(competencia.value);
+  if (!resultado) throw new Error('Informe o mês e o ano do relatório antes de gerar o arquivo.');
+  return { ano: Number(resultado[1]), mes: Number(resultado[2]) };
 }
 
 function habilitarDownloads(habilitado) {
@@ -33,6 +31,10 @@ async function validarArquivo() {
   try {
     const livro = XLSX.read(await selecionado.arrayBuffer(), { type: 'array' });
     if (!livro.Sheets.ESCALA) throw new Error();
+    if (!competencia.value) {
+      status.textContent = 'Planilha v\u00e1lida. Informe o m\u00eas e ano do relat\u00f3rio para liberar os downloads.';
+      return;
+    }
     habilitarDownloads(true); status.className = 'ok'; status.textContent = 'Planilha válida. Escolha o formato para baixar.';
   } catch (_) {
     status.className = 'erro'; status.textContent = 'A planilha precisa ter uma aba chamada "ESCALA".';
@@ -46,7 +48,7 @@ async function lerEscala() {
   const aba = livro.Sheets.ESCALA;
   if (!aba) throw new Error('Não encontrei a aba "ESCALA" na planilha selecionada.');
   const dados = XLSX.utils.sheet_to_json(aba, { header: 1, defval: null });
-  const { mes, ano } = identificarMesAno(dados);
+  const { mes, ano } = obterMesAnoSelecionado();
   const escala = Array.from({ length: new Date(ano, mes, 0).getDate() }, () => ({ manha: [], tarde: [], noite: [] }));
   const codigos = {
     M: [[ 'manha', false ]], D: [[ 'manha', false ], [ 'tarde', false ]], P: [[ 'manha', false ], [ 'tarde', false ], [ 'noite', false ]],
@@ -127,3 +129,7 @@ async function processar(formato) {
 document.querySelector('#gerarExcel').addEventListener('click', () => processar('excel'));
 document.querySelector('#gerarDocx').addEventListener('click', () => processar('word'));
 arquivo.addEventListener('change', validarArquivo);
+competencia.addEventListener('change', () => {
+  if (arquivo.files[0]) validarArquivo();
+  else habilitarDownloads(false);
+});

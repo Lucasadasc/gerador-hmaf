@@ -63,6 +63,20 @@ input {
     background: #f8faff;
 }
 
+input[type="month"] {
+    border-style: solid;
+}
+
+.ajuda-campo {
+    margin-top: 8px;
+}
+
+input:focus-visible,
+button:focus-visible {
+    outline: 3px solid #78aef0;
+    outline-offset: 2px;
+}
+
 .acoes {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -116,7 +130,7 @@ button img {
 small {
     display: block;
     margin-top: 18px;
-    color: #718096;
+    color: #526075;
 }
 
 @media (max-width: 460px) {
